@@ -1,11 +1,9 @@
 var plug, temperature;
 
-function zbApp (zserver) {
+function tempCtrlApp(zserver) {
     zserver.on('ind', function (msg) {
         switch (msg.type) {
             case 'devIncoming':
-                // 裝置加入網路
-                // 你可以開始操作入網裝置
                 msg.endpoints.forEach(function (ep) {
                     if (ep.devId === 81 && ep.clusters.has('genOnOff')) {
                         plug = ep;
@@ -33,7 +31,7 @@ function zbApp (zserver) {
     });
 }
 
-function tempChangedHdlr (tempValue) {
+function tempChangedHdlr(tempValue) {
     // 若 plug 尚未入網，則不做任何事
     if (!plug)
         return;
@@ -53,4 +51,4 @@ function tempChangedHdlr (tempValue) {
     }
 }
 
-module.exports = zbApp;
+module.exports = tempCtrlApp;

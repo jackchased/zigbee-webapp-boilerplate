@@ -6,55 +6,49 @@ var fs = require('fs'),
 
 var ZShepherd = require('zigbee-shepherd');
 
-// 使用 ioServer 作為與 Web Client 溝通的介面
-// [TODO]
-
-// 溫控系統的應用程式
-// [TODO]
-
-// 建立 zserver
-// [TODO]
-
-// 建立 HTTP Server
-// [TODO]
+// [TODO] 使用 ioServer 作為與 Web Client 溝通的介面
+// [TODO] 溫控系統的應用程式
+// [TODO] 建立 zserver
+// [TODO] 建立 HTTP Server
 
 server.listen(3030);
 
-// 啟動 ioServer
-// [TODO]
+// [TODO] 啟動 ioServer
 
-function serverApp () {
+function serverApp() {
     showWelcomeMsg();  // show Welcome Msg
     setLeaveMsg();     // set Leave Msg
 
-    // register Request handler
+    /***********************************************/
+    /* register Request handlers                   */
+    /***********************************************/
+
     // 註冊 permitJoin 處理函式
-    ioServer.regReqHdlr('permitJoin', function (args, cb) { 
+    ioServer.regReqHdlr('permitJoin', function (args, cb) {
         // [TODO]
     });
 
     // 註冊 getDevs 處理函式
-    ioServer.regReqHdlr('getDevs', function (args, cb) { 
+    ioServer.regReqHdlr('getDevs', function (args, cb) {
         // [TODO]
     });
 
-    ioServer.regReqHdlr('write', function (args, cb) { 
+    // 註冊 write 處理函式
+    ioServer.regReqHdlr('write', function (args, cb) {
         // [TODO]
     });
 
-    // event listeners
+    /***********************************************/
+    /* event listeners                             */
+    /***********************************************/
     zserver.on('ready', function () {
         console.log(chalk.green('[         ready ] '));
-
-        // 當 zigbee-shepherd 啟動完畢，執行溫控應用
-        // [TODO]
+        // [TODO] 當 zigbee-shepherd 啟動完畢，執行溫控應用
     });
 
-    // 監聽 permitJoining 事件，並轉發至 Client端
     zserver.on('permitJoining', function (timeLeft) {
         console.log(chalk.green('[ permitJoining ] ') + timeLeft + ' sec');
-
-        // [TODO]
+        // [TODO] 監聽 permitJoining 事件，並轉發至 Client 端
     });
 
     zserver.on('error', function (err) {
@@ -62,30 +56,24 @@ function serverApp () {
     });
 
     zserver.on('ind', function (msg) {
-        var periph = msg.periph;
-        
         switch (msg.type) {
-            /*** devIncoming   ***/
-            // 監聽 devIncoming 事件，並轉發至 Client端
             case 'devIncoming':
                 console.log(chalk.yellow('[   devIncoming ] ') + '@' + msg.data);
-                // [TODO]
+                // [TODO] 監聽 devIncoming 事件，並轉發至 Client 端
                 break;
 
-            /*** devLeaving    ***/
             case 'devLeaving':
-                // [TODO]
+                console.log(chalk.magenta('[     devStatus ] ') + '@' + msg.data + ', ' + chalk.red('offline'));
+                // [TODO] 監聽 devLeaving 事件，並轉發至 Client 端
                 break;
 
-            /*** devStatus     ***/
-            // 監聽 devStatus 事件，並轉發至 Client端
             case 'devStatus':
-                // [TODO]
+                console.log(chalk.magenta('[     devStatus ] ') + '@' + msg.endpoints[0].getIeeeAddr() + ', ' + msg.data);
+                // [TODO] 監聽 devStatus 事件，並轉發至 Client 端
                 break;
 
-            /*** attrChange    ***/
             case 'devChange':
-                // [TODO]
+                // [TODO] 監聽 devChange 事件，並轉發至 Client 端
                 break;
         }
     });
@@ -95,17 +83,16 @@ function serverApp () {
 
     dbPath = path.resolve(__dirname, dbPath);
     fs.exists(dbPath, function (isThere) {
-        if (isThere) { fs.unlink(dbPath); }
+        if (isThere) fs.unlink(dbPath);
     });
 
-    // 啟動 zigbee-shepherd
-    // [TODO]
+    // [TODO] 啟動 zigbee-shepherd
 }
 
 /***********************************************/
 /* Cook funciton                               */
 /***********************************************/
-function getDevInfo (ieeeAddr, eps) {
+function getDevInfo(ieeeAddr, eps) {
     var dev = {
             permAddr: ieeeAddr,
             status: zserver.list(ieeeAddr)[0].status,
@@ -125,7 +112,7 @@ function getDevInfo (ieeeAddr, eps) {
     return dev;
 }
 
-function getGadInfo (ep) {
+function getGadInfo(ep) {
     var epInfo = ep.dump(),
         gadType = getGadType(epInfo),
         gads = [];
@@ -148,7 +135,7 @@ function getGadInfo (ep) {
     return gads;
 }
 
-function getGadType (epInfo) {
+function getGadType(epInfo) {
     var props = [];
 
     switch (epInfo.devId) {
