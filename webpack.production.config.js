@@ -7,11 +7,11 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 var PATHS = {
-    main: path.join(__dirname, 'app', 'client.js'),         // app folder: source code
-    build: path.join(__dirname, 'build'),                   // build folder: bundle code
+    main: path.join(__dirname, 'app', 'client', 'client.js'),  // app folder: source code
+    build: path.join(__dirname, 'build'),                      // build folder: bundle code
     style: [
-        path.join(__dirname, 'app', 'styles', 'main.css'),
-        path.join(__dirname, 'app', 'styles', 'csshake.css')
+        path.join(__dirname, 'app', 'client', 'styles', 'main.css'),
+        path.join(__dirname, 'app', 'client', 'styles', 'csshake.css')
     ]
 };
 
@@ -22,7 +22,7 @@ module.exports = {
         vendor: ['react', 'react-dom', 'react-grid-layout', 'react-redux', 'react-addons-test-utils', 
             'react-tap-event-plugin', 'redux', 'socket.io-client', 'superagent']
     },
-    
+
     output: {
         path: PATHS.build,
         filename: '[name]-[hash].min.js',
@@ -32,7 +32,7 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new HtmlWebpackPlugin({
-            template: 'app/index.tpl.html',
+            template: 'app/client/index.tpl.html',
             inject: 'body',
             filename: 'index.html'
         }),
